@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Quarks.DomainModel": "1.0.0-*"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net46": {
+    }
+  },
+  "packOptions": {
+    "authors": [ "victor.govorov" ],
+    "iconUrl": "https://github.com/govorovvs/Quarks.DataAccess.EntityFramework/blob/master/logo.png?raw=true",
+    "owners": [ "victor.govorov" ],
+    "projectUrl": "https://github.com/govorovvs/Quarks.DataAccess.EntityFramework",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/govorovvs/Quarks.DataAccess.EntityFramework.git"
+    },
+    "tags": [ "architecture", "dataaccess", "ef", "entity framework" ]
+  },
+  "title": "Quarks.DataAccess.EntityFramework",
+  "version": "1.0.0-*"
+}
