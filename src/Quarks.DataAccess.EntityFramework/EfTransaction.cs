@@ -3,46 +3,46 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Quarks.DataAccess.EntityFramework.ContextManagement;
-using Quarks.DomainModel.Impl;
+using Quarks.Transactions.Impl;
 
 namespace Quarks.DataAccess.EntityFramework
 {
-	internal static class EfUnitOfWork
+	internal static class EfTransaction
 	{
 		private static readonly object CurrentLock = new object();
 
-		public static EfUnitOfWork<TDbContext> GetCurrent<TDbContext>(IEfContextManager<TDbContext> contextManager) where TDbContext : DbContext
+		public static EfTransaction<TDbContext> GetCurrent<TDbContext>(IEfContextManager<TDbContext> contextManager) where TDbContext : DbContext
 		{
-			if (UnitOfWork.Current == null)
+			if (Transaction.Current == null)
 			{
-				return new EfUnitOfWork<TDbContext>(contextManager);
+				return new EfTransaction<TDbContext>(contextManager);
 			}
 
 			string key = contextManager.GetHashCode().ToString();
 
-			IDependentUnitOfWork current;
-			if (!UnitOfWork.Current.DependentUnitOfWorks.TryGetValue(key, out current))
+			IDependentTransaction current;
+			if (!Transaction.Current.DependentTransactions.TryGetValue(key, out current))
 			{
 				lock (CurrentLock)
 				{
-					if (!UnitOfWork.Current.DependentUnitOfWorks.TryGetValue(key, out current))
+					if (!Transaction.Current.DependentTransactions.TryGetValue(key, out current))
 					{
-						current = new EfUnitOfWork<TDbContext>(contextManager);
-						UnitOfWork.Current.Enlist(key, current);
+						current = new EfTransaction<TDbContext>(contextManager);
+						Transaction.Current.Enlist(key, current);
 					}
 				}
 			}
 
-			return (EfUnitOfWork<TDbContext>)current;
+			return (EfTransaction<TDbContext>)current;
 		}
 	}
 
-	public class EfUnitOfWork<TDbContext> : IDependentUnitOfWork where TDbContext : DbContext
+	public class EfTransaction<TDbContext> : IDependentTransaction where TDbContext : DbContext
 	{
 		private bool _disposed;
 		private readonly Lazy<TDbContext> _context;
 
-		internal EfUnitOfWork(IEfContextManager<TDbContext> contextManager)
+		internal EfTransaction(IEfContextManager<TDbContext> contextManager)
 		{
 			if (contextManager == null) throw new ArgumentNullException(nameof(contextManager));
 

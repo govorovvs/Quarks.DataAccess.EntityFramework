@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Quarks.DataAccess.EntityFramework.ContextManagement;
-using Quarks.DomainModel.Impl;
+using Quarks.Transactions.Impl;
 
 namespace Quarks.DataAccess.EntityFramework.Tests
 {
 	[TestFixture]
-	public class EfUnitOfWorkGenericTests
+	public class EfTransactionGenericTests
 	{
 		private Mock<DbContext> _mockDbContext;
 		private Mock<IEfContextManager<DbContext>> _mockContextManager;
@@ -31,34 +31,34 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void Can_Be_Constructed_With_ContextManager()
 		{
-			var unitOfWork = new EfUnitOfWork<DbContext>(_mockContextManager.Object);
+			var transaction = new EfTransaction<DbContext>(_mockContextManager.Object);
 
-			Assert.That(unitOfWork.ContextManager, Is.EqualTo(_mockContextManager.Object));
+			Assert.That(transaction.ContextManager, Is.EqualTo(_mockContextManager.Object));
 		}
 
 		[Test]
-		public void Is_Instance_Of_IDependentUnitOfWork()
+		public void Is_Instance_Of_IDependentTransaction()
 		{
-			var unitOfWork =  CreateUnitOfWork();
+			var transaction =  CreateTransaction();
 
-			Assert.That(unitOfWork, Is.InstanceOf<IDependentUnitOfWork>());
+			Assert.That(transaction, Is.InstanceOf<IDependentTransaction>());
 		}
 
 		[Test]
 		public void Context_Test()
 		{
-			var unitOfWork = CreateUnitOfWork();
+			var transaction = CreateTransaction();
 
-			Assert.That(unitOfWork.Context, Is.SameAs(_mockDbContext.Object));
+			Assert.That(transaction.Context, Is.SameAs(_mockDbContext.Object));
 		}
 
 		[Test]
 		public void Dispose_Disposes_Context()
 		{
 			_mockDbContext.Setup(x => x.Dispose());
-			var unitOfWork = CreateUnitOfWork();
+			var transaction = CreateTransaction();
 
-			unitOfWork.Dispose();
+			transaction.Dispose();
 
 			_mockDbContext.VerifyAll();
 		}
@@ -66,11 +66,11 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void Dispose_Throws_An_Exception_If_It_Was_Previously_Disposed()
 		{
-			var unitOfWork = CreateUnitOfWork();
+			var transaction = CreateTransaction();
 
-			unitOfWork.Dispose();
+			transaction.Dispose();
 
-			Assert.Throws<ObjectDisposedException>(() => unitOfWork.Dispose());
+			Assert.Throws<ObjectDisposedException>(() => transaction.Dispose());
 		}
 
 		[Test]
@@ -79,9 +79,9 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 			_mockDbContext
 				.Setup(x => x.SaveChangesAsync(_cancellationToken))
 				.ReturnsAsync(10);
-			var unitOfWork = CreateUnitOfWork();
+			var transaction = CreateTransaction();
 
-			await unitOfWork.CommitAsync(_cancellationToken);
+			await transaction.CommitAsync(_cancellationToken);
 
 			_mockDbContext.VerifyAll();
 		}
@@ -89,20 +89,20 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void Commit_Throws_An_Exception_If_It_Was_Previously_Disposed()
 		{
-			var unitOfWork = CreateUnitOfWork();
+			var transaction = CreateTransaction();
 
-			unitOfWork.Dispose();
+			transaction.Dispose();
 
-			Assert.ThrowsAsync<ObjectDisposedException>(() => unitOfWork.CommitAsync(_cancellationToken));
+			Assert.ThrowsAsync<ObjectDisposedException>(() => transaction.CommitAsync(_cancellationToken));
 		}
 
-		private EfUnitOfWork<DbContext> CreateUnitOfWork()
+		private EfTransaction<DbContext> CreateTransaction()
 		{
-			var unitOfWork = new EfUnitOfWork<DbContext>(_mockContextManager.Object);
+			var transaction = new EfTransaction<DbContext>(_mockContextManager.Object);
 
-			Assert.That(unitOfWork.Context, Is.Not.Null);
+			Assert.That(transaction.Context, Is.Not.Null);
 
-			return unitOfWork;
+			return transaction;
 		}
 	}
 }

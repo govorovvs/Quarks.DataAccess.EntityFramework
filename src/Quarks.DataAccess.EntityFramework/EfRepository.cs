@@ -17,9 +17,9 @@ namespace Quarks.DataAccess.EntityFramework
 			get { return UnitOfWork.Context; }
 		}
 
-		private EfUnitOfWork<TDbContext> UnitOfWork
+		private EfTransaction<TDbContext> UnitOfWork
 		{
-			get { return EfUnitOfWork.GetCurrent(_contextManager); }
+			get { return EfTransaction.GetCurrent(_contextManager); }
 		}
 	}
 }
