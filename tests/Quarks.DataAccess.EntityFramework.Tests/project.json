@@ -6,7 +6,7 @@
     "Quarks.Transactions": "1.0.0-*",
     "NUnit": "3.4.1",
     "Microsoft.EntityFrameworkCore": "1.0.0",
-    "Moq": "4.5.19"
+    "Moq": "4.5.21"
   },
 
   "frameworks": {
