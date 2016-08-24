@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Quarks.DataAccess.EntityFramework.ContextManagement;
-using Quarks.Transactions.Impl;
+using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework
 {

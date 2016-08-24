@@ -2,7 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Quarks.DataAccess.EntityFramework.ContextManagement;
-using Quarks.Transactions.Impl;
+using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework.Tests
 {
@@ -35,7 +35,7 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void GetCurrent_Creates_EfTransaction_If_Current_Transaction()
 		{
-			using (Transaction currentTransaction = new Transaction())
+			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
 				EfTransaction<DbContext> currentEfTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
 
@@ -49,12 +49,12 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void GetCurrent_Enlists_EfTransaction_To_Current_Transaction()
 		{
-			using (Transaction currentTransaction = new Transaction())
+			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
 				EfTransaction<DbContext> efTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
 
 				string key = _mockContextManager.Object.GetHashCode().ToString();
-				Assert.That(currentTransaction.DependentTransactions[key], Is.SameAs(efTransaction));
+				Assert.That(Transaction.Current.DependentTransactions[key], Is.SameAs(efTransaction));
 
 				currentTransaction.Dispose();
 			}
@@ -63,7 +63,7 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		[Test]
 		public void GetCurrent_Returns_Previously_Created_EfTransaction()
 		{
-			using (Transaction currentTransaction = new Transaction())
+			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
 				EfTransaction<DbContext> previouslyCreatedEfTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Quarks.DataAccess.EntityFramework.ContextManagement;
-using Quarks.Transactions.Impl;
+using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework.Tests
 {

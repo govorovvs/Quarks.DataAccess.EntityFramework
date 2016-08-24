@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "Microsoft.EntityFrameworkCore": "1.0.0",
-    "Quarks.Transactions": "1.0.0-*"
+    "Quarks.Transactions": "2.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {
@@ -23,5 +23,5 @@
     "tags": [ "architecture", "dataaccess", "ef", "entity framework" ]
   },
   "title": "Quarks.DataAccess.EntityFramework",
-  "version": "1.0.0-*"
+  "version": "1.1.0-*"
 }
