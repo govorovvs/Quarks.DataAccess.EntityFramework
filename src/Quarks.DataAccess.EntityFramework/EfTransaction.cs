@@ -72,7 +72,7 @@ namespace Quarks.DataAccess.EntityFramework
 
 			return _context.IsValueCreated 
 				? Context.SaveChangesAsync(cancellationToken) 
-				: Task.CompletedTask;
+				: Task.FromResult(0);
 		}
 
 		private void ThrowIfDisposed()
