@@ -4,8 +4,8 @@
     "Microsoft.EntityFrameworkCore": "1.0.0",
     "Moq": "4.5.21",
     "NUnit": "3.4.1",
-    "Quarks.DataAccess.EntityFramework": "1.2.0-*",
-    "Quarks.Transactions": "2.1.0"
+    "Quarks.DataAccess.EntityFramework": "1.3.0-*",
+    "Quarks.Transactions": "2.2.0"
   },
   "frameworks": {
     "net46": {
