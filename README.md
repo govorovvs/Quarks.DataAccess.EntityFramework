@@ -4,7 +4,7 @@
 
 ## Example
 
-Here is an example that describes how to use HNibernate with Quarks.Transactions.
+Here is an example that describes how to use EntityFramework with Quarks.Transactions.
 
 ```csharp
 public class User : IEntity, IAggregate
@@ -84,7 +84,7 @@ internal static class EfTransaction
 		IDependentTransaction current;
 		if (!Transaction.Current.DependentTransactions.TryGetValue(key, out current))
 		{
-			current = new contextManager(contextManager.CreateContext());
+			current = new EfTransaction<TDbContext>(contextManager.CreateContext());
 			Transaction.Current.Enlist(key, current);
 		}
 
