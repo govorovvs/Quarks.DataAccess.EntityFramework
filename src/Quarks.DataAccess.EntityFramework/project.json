@@ -6,7 +6,7 @@
   "frameworks": {
     "net451": {
     },
-    "netstandard1.6": {
+    "netstandard1.3": {
     }
   },
   "packOptions": {
@@ -18,8 +18,8 @@
       "type": "git",
       "url": "https://github.com/govorovvs/Quarks.DataAccess.EntityFramework.git"
     },
-    "tags": [ "architecture", "dataaccess", "ef", "entity framework" ]
+    "tags": [ "quarks", "architecture", "dataaccess", "ef", "entity framework" ]
   },
   "title": "Quarks.DataAccess.EntityFramework",
-  "version": "1.4.0-*"
+  "version": "1.5.0-*"
 }
