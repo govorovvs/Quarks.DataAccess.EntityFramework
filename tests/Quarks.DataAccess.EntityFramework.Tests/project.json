@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "dotnet-test-nunit": "3.4.0-beta-2",
-    "Microsoft.EntityFrameworkCore": "1.0.1",
-    "Moq": "4.5.22",
+    "dotnet-test-nunit": "3.4.0-beta-3",
+    "Microsoft.EntityFrameworkCore": "1.1.0",
+    "Moq": "4.5.28",
     "NUnit": "3.5.0",
     "Quarks.DataAccess.EntityFramework": "1.5.0-*",
-    "Quarks.Transactions": "2.3.0"
+    "Quarks.Transactions": "2.3.1"
   },
   "frameworks": {
     "net46": {
