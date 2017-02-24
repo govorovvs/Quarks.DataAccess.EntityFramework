@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
-using Quarks.DataAccess.EntityFramework.ContextManagement;
 using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework.Tests
@@ -13,7 +12,7 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 	public class EfTransactionGenericTests
 	{
 		private Mock<DbContext> _mockDbContext;
-		private Mock<IEfContextManager<DbContext>> _mockContextManager;
+		private Mock<IDbContextFactory<DbContext>> _mockContextFactory;
 		private CancellationToken _cancellationToken;
 
 		[SetUp]
@@ -21,19 +20,19 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		{
 			_cancellationToken = new CancellationTokenSource().Token;
 			_mockDbContext = new Mock<DbContext>();
-			_mockContextManager = new Mock<IEfContextManager<DbContext>>();
+			_mockContextFactory = new Mock<IDbContextFactory<DbContext>>();
 
-			_mockContextManager
-				.Setup(x => x.CreateContext())
+			_mockContextFactory
+				.Setup(x => x.Create())
 				.Returns(_mockDbContext.Object);
 		}
 
 		[Test]
-		public void Can_Be_Constructed_With_ContextManager()
+		public void Can_Be_Constructed_With_ContextFactory()
 		{
-			var transaction = new EfTransaction<DbContext>(_mockContextManager.Object);
+			var transaction = new EfTransaction<DbContext>(_mockContextFactory.Object);
 
-			Assert.That(transaction.ContextManager, Is.EqualTo(_mockContextManager.Object));
+			Assert.That(transaction.ContextFactory, Is.EqualTo(_mockContextFactory.Object));
 		}
 
 		[Test]
@@ -98,7 +97,7 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 
 		private EfTransaction<DbContext> CreateTransaction()
 		{
-			var transaction = new EfTransaction<DbContext>(_mockContextManager.Object);
+			var transaction = new EfTransaction<DbContext>(_mockContextFactory.Object);
 
 			Assert.That(transaction.Context, Is.Not.Null);
 

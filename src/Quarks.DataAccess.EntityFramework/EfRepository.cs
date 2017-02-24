@@ -1,25 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Quarks.DataAccess.EntityFramework.ContextManagement;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quarks.DataAccess.EntityFramework
 {
 	public abstract class EfRepository<TDbContext> where TDbContext : DbContext
 	{
-		private readonly IEfContextManager<TDbContext> _contextManager;
+	    private readonly IDbContextProvider<TDbContext> _contextProvider;
 
-		protected EfRepository(IEfContextManager<TDbContext> contextManager)
-		{
-			_contextManager = contextManager;
-		}
+	    protected EfRepository(IDbContextProvider<TDbContext> contextProvider)
+	    {
+            if (contextProvider == null) throw new ArgumentNullException(nameof(contextProvider));
 
-		protected TDbContext Context
-		{
-			get { return UnitOfWork.Context; }
-		}
+	        _contextProvider = contextProvider;
+	    }
 
-		private EfTransaction<TDbContext> UnitOfWork
+        protected TDbContext Context
 		{
-			get { return EfTransaction.GetCurrent(_contextManager); }
+			get { return _contextProvider.Context; }
 		}
 	}
 }

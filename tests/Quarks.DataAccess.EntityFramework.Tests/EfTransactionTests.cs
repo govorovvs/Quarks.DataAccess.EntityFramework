@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
-using Quarks.DataAccess.EntityFramework.ContextManagement;
 using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework.Tests
@@ -10,26 +9,31 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 	public class EfTransactionTests
 	{
 		private Mock<DbContext> _mockDbContext;
-		private Mock<IEfContextManager<DbContext>> _mockContextManager;
+		private Mock<IDbContextFactory<DbContext>> _mockContextFactory;
+
+	    private const string Key = "key";
 
 		[SetUp]
 		public void SetUp()
 		{
 			_mockDbContext = new Mock<DbContext>();
-			_mockContextManager = new Mock<IEfContextManager<DbContext>>();
+			_mockContextFactory = new Mock<IDbContextFactory<DbContext>>();
 
-			_mockContextManager
-				.Setup(x => x.CreateContext())
+		    _mockContextFactory
+		        .Setup(x => x.GetKey())
+		        .Returns(Key);
+			_mockContextFactory
+				.Setup(x => x.Create())
 				.Returns(_mockDbContext.Object);
 		}
 
 		[Test]
 		public void GetCurrent_Creates_EfTransaction_If_No_Current_Transaction()
 		{
-			EfTransaction<DbContext> currentEfTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
+			var currentEfTransaction = EfTransaction.GetCurrent(_mockContextFactory.Object);
 
 			Assert.That(currentEfTransaction, Is.Not.Null);
-			Assert.That(currentEfTransaction.ContextManager, Is.SameAs(_mockContextManager.Object));
+		    Assert.That(currentEfTransaction.Context, Is.EqualTo(_mockDbContext.Object));
 		}
 
 		[Test]
@@ -37,12 +41,12 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		{
 			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
-				EfTransaction<DbContext> currentEfTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
+                var currentEfTransaction = EfTransaction.GetCurrent(_mockContextFactory.Object);
 
 				Assert.That(currentEfTransaction, Is.Not.Null);
-				Assert.That(currentEfTransaction.ContextManager, Is.SameAs(_mockContextManager.Object));
+                Assert.That(currentEfTransaction.Context, Is.EqualTo(_mockDbContext.Object));
 
-				currentTransaction.Dispose();
+                currentTransaction.Dispose();
 			}
 		}
 
@@ -51,9 +55,9 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		{
 			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
-				EfTransaction<DbContext> efTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
+                var efTransaction = EfTransaction.GetCurrent(_mockContextFactory.Object);
 
-				string key = _mockContextManager.Object.GetHashCode().ToString();
+				string key = _mockContextFactory.Object.GetKey();
 				Assert.That(Transaction.Current.DependentTransactions[key], Is.SameAs(efTransaction));
 
 				currentTransaction.Dispose();
@@ -65,9 +69,9 @@ namespace Quarks.DataAccess.EntityFramework.Tests
 		{
 			using (ITransaction currentTransaction = Transaction.BeginTransaction())
 			{
-				EfTransaction<DbContext> previouslyCreatedEfTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
+				var previouslyCreatedEfTransaction = EfTransaction.GetCurrent(_mockContextFactory.Object);
 
-				EfTransaction<DbContext> efTransaction = EfTransaction.GetCurrent(_mockContextManager.Object);
+				var efTransaction = EfTransaction.GetCurrent(_mockContextFactory.Object);
 
 				Assert.That(efTransaction, Is.SameAs(previouslyCreatedEfTransaction));
 
