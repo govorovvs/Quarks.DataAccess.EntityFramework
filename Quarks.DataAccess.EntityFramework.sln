@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A683A513-AC17-445F-ABDD-E53FE9C3A47E}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.cake = build.cake
 		build.cmd = build.cmd
 		build.ps1 = build.ps1
-		global.json = global.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{090F64E9-FCE7-443E-85F1-A6E6B3678E5A}"
@@ -17,9 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{090F64E9
 		tools\packages.config = tools\packages.config
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Quarks.DataAccess.EntityFramework", "src\Quarks.DataAccess.EntityFramework\Quarks.DataAccess.EntityFramework.xproj", "{63B205F2-5033-4E7F-9C1A-6A84A27001F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quarks.DataAccess.EntityFramework", "src\Quarks.DataAccess.EntityFramework\Quarks.DataAccess.EntityFramework.csproj", "{63B205F2-5033-4E7F-9C1A-6A84A27001F6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Quarks.DataAccess.EntityFramework.Tests", "tests\Quarks.DataAccess.EntityFramework.Tests\Quarks.DataAccess.EntityFramework.Tests.xproj", "{1665BF07-5E47-4FE3-9B3A-E207183E84E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quarks.DataAccess.EntityFramework.Tests", "tests\Quarks.DataAccess.EntityFramework.Tests\Quarks.DataAccess.EntityFramework.Tests.csproj", "{1665BF07-5E47-4FE3-9B3A-E207183E84E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

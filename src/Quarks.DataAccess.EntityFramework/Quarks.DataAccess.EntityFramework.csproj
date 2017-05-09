@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyTitle>Quarks.DataAccess.EntityFramework</AssemblyTitle>
+    <VersionPrefix>1.5.1</VersionPrefix>
+    <TargetFrameworks>net451;netstandard1.3</TargetFrameworks>
+    <AssemblyName>Quarks.DataAccess.EntityFramework</AssemblyName>
+    <PackageId>Quarks.DataAccess.EntityFramework</PackageId>
+    <PackageTags>quarks;architecture;dataaccess;ef;entity framework</PackageTags>
+    <PackageIconUrl>https://github.com/govorovvs/Quarks.DataAccess.EntityFramework/blob/master/logo.png?raw=true</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/govorovvs/Quarks.DataAccess.EntityFramework</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/govorovvs/Quarks.DataAccess.EntityFramework.git</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <Version>1.5.2</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
+    <PackageReference Include="Quarks.Transactions" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

@@ -2,66 +2,51 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Quarks.DataAccess.EntityFramework.ContextManagement;
 using Quarks.Transactions;
 
 namespace Quarks.DataAccess.EntityFramework
 {
-	internal static class EfTransaction
+	public static class EfTransaction
 	{
-		private static readonly object CurrentLock = new object();
+	    public static IEfTransaction<TDbContext> GetCurrent<TDbContext>(IDbContextFactory<TDbContext> contextFactory)
+	        where TDbContext : DbContext
+	    {
+	        Transaction transaction = Transaction.Current;
+	        string key = contextFactory.GetKey();
 
-		public static EfTransaction<TDbContext> GetCurrent<TDbContext>(IEfContextManager<TDbContext> contextManager) where TDbContext : DbContext
-		{
-			if (Transaction.Current == null)
-			{
-				return new EfTransaction<TDbContext>(contextManager);
-			}
-
-			string key = contextManager.GetHashCode().ToString();
-
-			IDependentTransaction current;
-			if (!Transaction.Current.DependentTransactions.TryGetValue(key, out current))
-			{
-				lock (CurrentLock)
-				{
-					if (!Transaction.Current.DependentTransactions.TryGetValue(key, out current))
-					{
-						current = new EfTransaction<TDbContext>(contextManager);
-						Transaction.Current.Enlist(key, current);
-					}
-				}
-			}
-
-			return (EfTransaction<TDbContext>)current;
-		}
+	        IDependentTransaction current =
+	            transaction == null
+	                ? new EfTransaction<TDbContext>(contextFactory)
+	                : transaction.GetOrEnlist(key, () => new EfTransaction<TDbContext>(contextFactory));
+	        return (EfTransaction<TDbContext>) current;
+	    }
 	}
 
-	public class EfTransaction<TDbContext> : IDependentTransaction where TDbContext : DbContext
+    internal class EfTransaction<TDbContext> : IEfTransaction<TDbContext>, IDependentTransaction where TDbContext : DbContext
 	{
 		private bool _disposed;
-		private readonly Lazy<TDbContext> _context;
+		private TDbContext _context;
 
-		internal EfTransaction(IEfContextManager<TDbContext> contextManager)
+	    internal EfTransaction(IDbContextFactory<TDbContext> contextFactory)
 		{
-			if (contextManager == null) throw new ArgumentNullException(nameof(contextManager));
+			if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
 
-			ContextManager = contextManager;
-			_context = new Lazy<TDbContext>(contextManager.CreateContext);
+		    ContextFactory = contextFactory;
 		}
 
-		public IEfContextManager<TDbContext> ContextManager { get; }
+        public IDbContextFactory<TDbContext> ContextFactory { get; }
 
-		public TDbContext Context => _context.Value;
+        public TDbContext Context
+	    {
+	        get { return _context ?? (_context = ContextFactory.Create()); }
+	    }
 
 		public void Dispose()
 		{
 			ThrowIfDisposed();
 
-			if (_context.IsValueCreated)
-			{
-				Context.Dispose();
-			}
+            _context ?.Dispose();
+		    _context = null;
 
 			_disposed = true;
 		}
@@ -70,8 +55,8 @@ namespace Quarks.DataAccess.EntityFramework
 		{
 			ThrowIfDisposed();
 
-			return _context.IsValueCreated 
-				? Context.SaveChangesAsync(cancellationToken) 
+			return _context != null
+				? _context.SaveChangesAsync(cancellationToken) 
 				: Task.FromResult(0);
 		}
 
