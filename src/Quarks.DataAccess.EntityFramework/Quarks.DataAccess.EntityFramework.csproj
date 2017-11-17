@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyTitle>Quarks.DataAccess.EntityFramework</AssemblyTitle>
-    <VersionPrefix>1.7.0</VersionPrefix>
+    <VersionPrefix>1.7.1</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Quarks.DataAccess.EntityFramework</AssemblyName>
     <PackageId>Quarks.DataAccess.EntityFramework</PackageId>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Quarks.Transactions" Version="2.5.0" />
   </ItemGroup>
 
