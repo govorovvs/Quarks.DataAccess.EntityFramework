@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Quarks.Transactions;
+#if NET461
+using System.Data.Entity;
+#else
+using Microsoft.EntityFrameworkCore;
+#endif
 
 namespace Quarks.DataAccess.EntityFramework
 {
